@@ -1,0 +1,69 @@
+<html>
+  <body>
+    <img class="pointer" src="/jerry.png" />
+  </body>
+  <script>
+    document.onmousemove = handleMouseMove;
+    const pointer = document.getElementsByClassName("pointer")[0];
+
+    let prePosition = {
+      x: 0,
+      y: 0,
+    };
+
+    function getAngle(x, y) {
+      const angle = Math.atan2(x, y);
+
+      return (angle * 180) / Math.PI + 90;
+    }
+
+    function handleMouseMove(event) {
+      const { pageX, pageY } = event;
+
+      if (pageX !== null && pageY != null) {
+        pointer.style.left = pageX + "px";
+        pointer.style.top = pageY + "px";
+
+        // check direction
+        const newX = pageX - prePosition.x;
+        const newY = pageY - prePosition.y;
+
+        const angle = getAngle(newX, newY);
+
+        if (newX < 0) {
+          pointer.style.transform = `scaleX(-1) rotate(${angle}deg)`;
+        } else {
+          let newAngle = (angle == 180
+            ? 0
+            : angle > 180
+            ? angle + 90
+            : angle - 90);
+          pointer.style.transform = `scaleX(1) rotate(${newAngle}deg)`;
+        }
+
+        prePosition = {
+          x: pageX,
+          y: pageY,
+        };
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --pointer-size: 60px;
+    }
+    body {
+      padding: 0px;
+      margin: 0px;
+      position: relative;
+      cursor: none;
+    }
+
+    .pointer {
+      position: absolute;
+      width: var(--pointer-size);
+      height: var(--pointer-size);
+      border-radius: 100%;
+    }
+  </style>
+</html>
